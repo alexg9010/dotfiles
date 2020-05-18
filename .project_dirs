@@ -5,10 +5,10 @@
 #############################################
 
 # Pigx chipseq
-P_CHIPSEQ="/home/agosdsc/projects/pigx/pigx_chipseq/"
+PIGX_CHIPSEQ="/home/agosdsc/projects/pigx/pigx_chipseq/"
 
 # Pigx bsseq
-P_BSSEQ="/home/agosdsc/projects/pigx/pigx_bsseq/"
+PIGX_BSSEQ="/home/agosdsc/projects/pigx/pigx_bsseq/"
 
 # animesh bsseq lymphoma
 ANIMESH="/home/agosdsc/projects/Animesh_bsseq/"
