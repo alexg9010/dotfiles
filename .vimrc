@@ -31,8 +31,8 @@ imap <Ctrl-V><backspace> <Ctrl-V><Esc>lxi
 syntax on
 
 "set solarized color scheme
-set background=dark
-colorscheme solarized
+" set background=dark
+" colorscheme solarized
 
 " show whitespace characters
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
