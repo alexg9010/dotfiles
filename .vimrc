@@ -93,8 +93,15 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 let g:ale_virtualenv_dir_names = []
 
-" add auto-braces matching
-set runtimepath^=~/.vim/pack/dist/start/auto-pair
+" add vim surround for simple surrounding
+" https://github.com/tpope/vim-surround
+" It's easiest to explain with examples. Press cs"' inside
+"
+" "Hello world!"
+" to change it to
+"
+" 'Hello world!''"
+set runtimepath^=~/.vim/packdist/start/vim-surround
 
 " add nvim-r for r-console 
 set runtimepath^=~/.vim/pack/dist/start/Nvim-R
