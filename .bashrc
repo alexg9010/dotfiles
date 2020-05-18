@@ -72,11 +72,11 @@ alias dockclusterhome='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.
 alias docktursundata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/data/tursun ~/Desktop/Clustershares/tursundata -o volname=tursundata'
 alias dockakalindata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/data/akalin ~/Desktop/Clustershares/akalindata -o volname=akalindata'
 
-alias docktursunfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/AG_Tursun ~/Desktop/Clustershares/tursunfast -o volname=tursunfast'
-alias dockakalinfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/AG_Akalin ~/Desktop/Clustershares/akalinfast -o volname=akalinfast'
+alias docktursunfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/AG_Tursun/agosdsc ~/Desktop/Clustershares/tursunfast -o volname=tursunfast'
+alias dockakalinfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/AG_Akalin/agosdsc ~/Desktop/Clustershares/akalinfast -o volname=akalinfast'
 
-alias docklocalhome='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@beast.mdc-berlin.net:/home/agosdsc ~/Desktop/Clustershares/localhome -o volname=localhome'
-alias docklocaldata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@beast.mdc-berlin.net:/data/local ~/Desktop/Clustershares/localdata -o volname=localdata'
+alias docklocalhome='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@hulk.mdc-berlin.net:/home/agosdsc ~/Desktop/Clustershares/localhome -o volname=localhome'
+alias docklocaldata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@hulk.mdc-berlin.net:/data/local/agosdsc ~/Desktop/Clustershares/localdata -o volname=localdata'
 
 alias dockfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/ ~/Desktop/Clustershares/fast -o volname=fast'
 
