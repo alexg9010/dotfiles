@@ -25,6 +25,9 @@ fi
 alias ls='ls --color=auto'
 alias lh='ls -lh'
 
+alias ltd='ls -lht'
+alias lt='ls -lhtr'
+
 ## du to show size of dirs
 alias dud="du -chd1"
 
