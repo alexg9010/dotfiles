@@ -128,3 +128,18 @@ let R_assign = 0
 " add obsession.vim for continous session saving
 set runtimepath^=~/.vim/pack/dist/start/vim-obsession
 
+
+" add fzf.vim for fuzzy file and code search
+" installed with guix
+set runtimepath^=~/.fzf
+set runtimepath^=~/.vim/pack/dist/start/fzf.vim
+" Make :Ag not match file names, only the file content
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   <bang>0)
+
+nnoremap <C-g> :Rg<Cr>
+nnoremap <C-f> :Files<Cr>
