@@ -19,9 +19,10 @@
 	ci = commit
 	st = status
 	ls = log --pretty=format:\"%C(green)%h\\\\ %C(yellow)[%ad]%Cred%d\\\\ %Creset%s%Cblue\\\\ [%an]\" --decorate --date=relative
-	ld = "!f() { git log --online $1 --not $2 }; f"
-	ldm = "!f() { git log --online $1 --not master }; f"
+	ld = "!f() { git log --oneline --date=relative $1 --not $2; }; f"
+	ldm = "!f() { git log --oneline --date=relative $1 --not master; }; f"
 	bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -n1 git branch -d; }; f"
+	dm = "!f() { git diff master...$1; }; f"
 	assume-unchanged = update-index --assume-unchanged
 	assume-changed = update-index --no-assume-unchanged
 	cbr = rev-parse --abbrev-ref HEAD
