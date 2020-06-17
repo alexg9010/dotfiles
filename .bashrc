@@ -44,9 +44,9 @@ METHYLKIT="/Users/agosdsc/Development/R/methylKit-dev/methylKit/"
 alias openPort='ssh -D localhost:54321 agosdsc@hulk.mdc-berlin.net'
 alias chromiumProxy="open -na '/Applications/Chromium.app/' --args --proxy-server='socks5://localhost:54321' --temp-profile --profile-directory=‘~/Tmp’ --user-data-dir='/Users/agosdsc/Tmp'"
 
-alias runJupiterNow="chromiumProxy; openPort 'guix-load ~/jupyter; jupyter-notebook --no-browser --port 8765;'" 
+alias runJupyterNow="chromiumProxy; openPort 'guix-load ~/jupyter; jupyter-notebook --no-browser --port 8765;'"
 
-function runJupiter {
+function runJupyter {
 	echo "starting chromium with proxy setup"
 	chromiumProxy
 	echo "please start jupiter on beast using:"
