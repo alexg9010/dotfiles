@@ -1,7 +1,6 @@
 # This is Git's per-user configuration file.
 [user]
 	name = Alexander Blume
-	email = alex.gos90@gmail.com
 [color]
 	ui = auto
 	branch = auto
