@@ -111,7 +111,7 @@ if [ -f /usr/local/etc/bash_completion.d/.git-completion.bash ]; then
 fi
 
 ## Powerline-style Bash prompt (https://github.com/riobard/bash-powerline)
-# curl https://raw.githubusercontent.com/riobard/bash-powerline/master/bash-powerline.sh > ~/.bash-powerline.sh
+# curl https://raw.githubusercontent.com/alexg9010/bash-powerline/master/bash-powerline.sh > ~/.bash-powerline.sh
 source ~/.bash-powerline.sh
 
 # fix gpg issue
