@@ -2,14 +2,14 @@
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+    . /etc/bashrc
 fi
 
 # Project Paths
 # Heavily used project paths can be defined here,
 # to provide a shortcut.
 if [ -f ~/.project_dirs ]; then
-	    . ~/.project_dirs
+        . ~/.project_dirs
 fi
 
 # Alias definitions.
@@ -18,7 +18,7 @@ fi
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.bash_aliases ]; then
-	    . ~/.bash_aliases
+        . ~/.bash_aliases
 fi
 
 # colored ls
@@ -52,14 +52,14 @@ export HTOPRC
 # curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
 # mv ~/.git-completion.bash /usr/local/etc/bash_completion.d/
 if [ -f ~/.git-completion.bash ]; then
-	  . ~/.git-completion.bash
+      . ~/.git-completion.bash
   fi
 
 ##################################################
 # GUIX 
 ##################################################
 
-export GUIX_PROFILE="~/.guix-profile/"
+export GUIX_PROFILE="$HOME/.guix-profile"
 
 # Source software installed to default guix profile
 if [ -f ~/.guix-profile/etc/profile ]; then
@@ -68,12 +68,25 @@ fi
 
 # load guix profile in current folder if there is any
 function guix-load() {
-    if [ -z $1 ] 
-        then
-		    export GUIX_PROFILE=""		
-            source ~/.guix-profile/etc/profile
+    # -z tests if arg is empty
+    if [ -z "$1" ]; then
+            export GUIX_PROFILE="$HOME/.guix-profile"
+            echo "loading $GUIX_PROFILE"
+            source $GUIX_PROFILE/etc/profile
         else 
-            source "$1"/.guix-profile/etc/profile
+            profile=${1%/.guix-profile*}
+            profile=$profile/.guix-profile
+            if [ -d $profile ]; then
+                    echo "loading $profile"
+                    # double brackets to do pattern matching
+                    if [[ $profile != /* ]] && [[ $profile != ~/* ]]; then
+                        profile="$PWD/$profile"
+                    fi
+                    GUIX_PROFILE=""
+                    source "$profile"/etc/profile
+                else
+                    echo "no guix profile found!"
+            fi
         fi 
 }
 
@@ -87,6 +100,12 @@ alias activate="bash /home/agosdsc/playground/guix/activate"
 
 # use guix locales
 export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
+
+# export Certificates
+# guix install nss-certs
+export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+export GIT_SSL_CAINFO="$SSL_CERT_FILE"
 
 ## load development profiles for pigx
 alias load_chipseq="export GUIX_PROFILE=~/pigx/pigx_chipseq/.guix-profile; source ~/pigx/pigx_chipseq/.guix-profile/etc/profile"
@@ -159,4 +178,10 @@ unset __conda_setup
 # <<< conda init <<<
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+if type rg >/dev/null 2>&1; then
+	export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+if type fd >/dev/null 2>&1; then
+	export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+fi
