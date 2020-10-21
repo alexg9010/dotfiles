@@ -43,6 +43,15 @@ export GPG_TTY
 HTOPRC=~/.config/htop/htoprc
 export HTOPRC
 
+##################################################
+# LOOK 
+##################################################
+
+## Powerline-style Bash prompt (https://github.com/riobard/bash-powerline)
+# curl https://raw.githubusercontent.com/alexg9010/bash-powerline/master/bash-powerline.sh > ~/.bash-powerline.sh
+if [ -f ~/.bash-powerline.sh ]; then
+	source ~/.bash-powerline.sh
+fi
 
 ##################################################
 # COMPLETIONS 
@@ -118,6 +127,17 @@ alias load_rnaseq="export GUIX_PROFILE=~/pigx/pigx_rnaseq/.guix-profile; source 
 
 # # change default vim to vim8
 # alias vim="$GUIX_PROFILE/bin/vim"
+
+# start vim with sessions enabled
+function vim() {
+  if test $# -gt 0; then
+    env vim "$@"
+  elif test -f Session.vim; then
+    env vim -S
+  else
+    env vim -c Obsession
+  fi
+}
 
 # # change default tmux to from guix:wq
 # alias tmux="guix_load ;  ~/.guix-profile/bin/tmux"

@@ -87,6 +87,8 @@ let g:airline#extensions#fugitiveline#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 " let g:airline#extensions#branch#enabled = 1
 
+" add obsession.vim for continous session saving
+set runtimepath^=~/.vim/pack/dist/start/vim-obsession
 
 " add ale for syntax check
 " Set this. Airline will handle the rest.
@@ -120,13 +122,6 @@ nmap <Space> <Plug>RDSendLine
 " disable replacement of _ with <-
 let R_assign = 0
 
-" ADD optional PACKAGE 'after VIM8'
-" :packadd! undotree
-" :packadd! vim-airline-themes 
-
-
-" add obsession.vim for continous session saving
-set runtimepath^=~/.vim/pack/dist/start/vim-obsession
 
 
 " add fzf.vim for fuzzy file and code search
@@ -143,3 +138,12 @@ command! -bang -nargs=* Rg
 
 nnoremap <C-g> :Rg<Cr>
 nnoremap <C-f> :Files<Cr>
+
+
+" ADD optional PACKAGE 'after VIM8'
+" :packadd! undotree
+" :packadd! vim-airline-themes 
+
+
+
+
