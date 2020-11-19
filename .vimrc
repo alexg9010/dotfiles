@@ -16,6 +16,17 @@ set expandtab
 " close preview window after autocomplete
 autocmd CompleteDone * pclose
 
+" change the way vim replaces text
+set wildmode=longest,list:longest
+
+" easier split navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+
+
 "set windows split defaults
 set splitright
 set splitbelow
@@ -122,7 +133,9 @@ nmap <Space> <Plug>RDSendLine
 " disable replacement of _ with <-
 let R_assign = 0
 
-
+" add vim-tmux-navigator to move via <CTRL>-h,j,k,l from/to tmux
+" https://www.bugsnag.com/blog/tmux-and-vim
+set runtimepath^=~/.vim/pack/dist/start/vim-tmux-navigator
 
 " add fzf.vim for fuzzy file and code search
 " installed with guix
