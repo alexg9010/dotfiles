@@ -89,6 +89,10 @@ set runtimepath^=~/.vim/pack/dist/start/commentary
 " add tabular for aligning text
 " https://github.com/godlygeek/tabular
 set runtimepath^=~/.vim/pack/dist/start/tabular/
+" add command to revert alignment of text
+" by removing spaces
+command -range=% -nargs=+ Untab :<line1>,<line2>s/\s\+<args>\s\+/<args>/g
+
 
 " add fugitive for optimized git
 set runtimepath^=~/.vim/pack/dist/start/vim-fugitive/
