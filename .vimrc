@@ -31,8 +31,8 @@ imap <Ctrl-V><backspace> <Ctrl-V><Esc>lxi
 syntax on
 
 "set solarized color scheme
-set background=dark
-colorscheme solarized
+" set background=dark
+" colorscheme solarized
 
 " show whitespace characters
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
@@ -122,9 +122,29 @@ let R_assign = 0
 " :packadd! undotree
 " :packadd! vim-airline-themes 
 
+" " add tabnine for autocompletion
+" set runtimepath^=~/.vim/pack/dist/opt/tabnine-vim
 
 " add obsession.vim for continous session saving
 set runtimepath^=~/.vim/pack/dist/start/vim-obsession
+
+" set pdf viewer for latex live preview
+let g:livepreview_previewer = 'open -a Preview'
+" increase update time for plugin
+autocmd Filetype tex setl updatetime=1
+
+" add coc autocomple
+set runtimepath^=~/.vim/pack/coc/start/coc.nvim-release
+let g:coc_disable_startup_warning = 1
+" add python support
+" :CocInstall coc-python
+" add markdown support
+" :CocInstall coc-markdownlint
+" add latex support
+" :CocInstall coc-texlab
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 
 " add fzf.vim for fuzzy file and code search
 " installed with guix
