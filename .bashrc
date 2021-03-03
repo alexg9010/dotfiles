@@ -110,6 +110,22 @@ if [ -f /usr/local/etc/bash_completion.d/.git-completion.bash ]; then
   . /usr/local/etc/bash_completion.d/.git-completion.bash
 fi
 
+##################################################
+# GH GITHUB CLI
+##################################################
+
+# enable default pager with color support
+# ! ONLY DONE ONCE
+# gh config set pager "less -R"
+
+# set default editor
+# ! ONLY DONE ONCE
+# gh config set editor vim
+
+## Github cli (gh) completion
+eval "$(gh completion -s bash)"
+
+
 ## Powerline-style Bash prompt (https://github.com/riobard/bash-powerline)
 # curl https://raw.githubusercontent.com/alexg9010/bash-powerline/master/bash-powerline.sh > ~/.bash-powerline.sh
 source ~/.bash-powerline.sh
