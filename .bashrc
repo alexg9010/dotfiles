@@ -14,6 +14,7 @@ fi
 # General Aliases
 
 alias ls='ls -FG'
+alias lh='ls -lh'
 alias ll='ls -aFGlh'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -23,9 +24,33 @@ alias zcat="gunzip -c"
 
 alias cpd="$HOME/bin/pmd-bin-6.22.0/bin/run.sh cpd"
 
+## replace conda with mamba
+alias conda="/Users/agosdsc/opt/anaconda3/envs/new_base/bin/mamba"
+
+## Bash completion
+# after doing: brew install bash-completion 
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
+## Git completion
+# curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bas
+# mv ~/.git-completion.bash /usr/local/etc/bash_completion.d/
+if [ -f /usr/local/etc/bash_completion.d/.git-completion.bash ]; then
+  . /usr/local/etc/bash_completion.d/.git-completion.bash
+fi
+
 ## use git repo for tracking dotfiles (https://www.atlassian.com/git/tutorials/dotfiles)
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' 
 alias dfs='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' 
+## get git completion for dotfiles aliases
+# https://stackoverflow.com/questions/9869227/git-autocomplete-in-bash-aliases/24665529
+# Main git completions (prior to git 2.30, you an use _git instead of __git_main)
+# __git_complete dotfiles __git_main
+# __git_complete dfs __git_main
+__git_complete dotfiles _git
+__git_complete dfs _git
+
 
 ## Functions
 
@@ -41,7 +66,7 @@ METHYLKIT="/Users/agosdsc/Development/R/methylKit-dev/methylKit/"
 
 ## Jupiter Notebook
 
-alias openPort='ssh -D localhost:54321 agosdsc@hulk.mdc-berlin.net'
+alias openPort='ssh -D localhost:54321 agosdsc@beast.mdc-berlin.net'
 alias chromiumProxy="open -na '/Applications/Chromium.app/' --args --proxy-server='socks5://localhost:54321' --temp-profile --profile-directory=‘~/Tmp’ --user-data-dir='/Users/agosdsc/Tmp'"
 
 alias runJupyterNow="chromiumProxy; openPort 'guix-load ~/jupyter; jupyter-notebook --no-browser --port 8765;'"
@@ -72,7 +97,7 @@ alias minion='ssh agosdsc@cl-tursun21.mdc-berlin.net'
 
 alias dockclusterhome='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@beast.mdc-berlin.net:/clusterhome/agosdsc ~/Desktop/Clustershares/clusterhome -o volname=clusterhome'
 alias docktursundata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/data/tursun ~/Desktop/Clustershares/tursundata -o volname=tursundata'
-alias dockakalindata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/data/akalin ~/Desktop/Clustershares/akalindata -o volname=akalindata'
+alias dockakalindata='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/data/akalin/agosdsc ~/Desktop/Clustershares/akalindata -o volname=akalindata'
 
 alias docktursunfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/AG_Tursun/agosdsc ~/Desktop/Clustershares/tursunfast -o volname=tursunfast'
 alias dockakalinfast='sshfs -o reconnect -o follow_symlinks -o IdentityFile=~/.ssh/beast_id_rsa agosdsc@max-login.mdc-berlin.net:/fast/AG_Akalin/agosdsc ~/Desktop/Clustershares/akalinfast -o volname=akalinfast'
@@ -97,18 +122,6 @@ HISTSIZE=100000
 ## Add to PATH
 export PATH="/Users/agosdsc/bin:$PATH"
 
-## Bash completion
-# after doing: brew install bash-completion 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
-fi
-
-## Git completion
-# curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bas
-# mv ~/.git-completion.bash /usr/local/etc/bash_completion.d/
-if [ -f /usr/local/etc/bash_completion.d/.git-completion.bash ]; then
-  . /usr/local/etc/bash_completion.d/.git-completion.bash
-fi
 
 ##################################################
 # GH GITHUB CLI
@@ -158,3 +171,5 @@ unset __conda_setup
 # <<< conda init <<<
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+[ -f ~/.forgit/forgit.plugin.zsh ] && source ~/.forgit/forgit.plugin.zsh
