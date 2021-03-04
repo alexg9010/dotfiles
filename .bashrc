@@ -43,6 +43,9 @@ export GPG_TTY
 HTOPRC=~/.config/htop/htoprc
 export HTOPRC
 
+## XDG Paths
+export XDG_DATA_DIRS="/usr/share/"
+
 ##################################################
 # LOOK 
 ##################################################
@@ -63,6 +66,23 @@ fi
 if [ -f ~/.git-completion.bash ]; then
       . ~/.git-completion.bash
   fi
+
+## Github cli (gh) completion 
+eval "$(~/bin/gh completion -s bash)"
+
+
+
+##################################################
+# GH GITHUB CLI 
+##################################################
+
+# enable default pager with color support
+# ! ONLY DONE ONCE
+# gh config set pager "less -R"
+
+# set default editor
+# ! ONLY DONE ONCE
+# gh config set editor vim
 
 ##################################################
 # GUIX 
@@ -139,6 +159,21 @@ function vim() {
   fi
 }
 
+VIMWIKIDIR=$HOME/wiki
+# vimwiki git integration
+vimwiki () {
+    if [[ $# == 0 ]]
+    then
+        vim +'VimwikiIndex'
+    elif [[ $1 == 'git' ]]
+    then
+        git -C $VIMWIKIDIR/ ${@:2}
+    else
+        echo 'Usage: vimwiki [git] [args ...]'
+    fi
+}
+
+
 # # change default tmux to from guix:wq
 # alias tmux="guix_load ;  ~/.guix-profile/bin/tmux"
 
@@ -156,10 +191,21 @@ function vim() {
 
 alias ltree="tree -Dh"
 
+# add autojump with z
+if [ -f ~/.guix-profile/bin/z.sh ]; then
+      . ~/.guix-profile/bin/z.sh
+fi
+
+export _Z_NO_PROMPT_COMMAND=1
+alias cf='cd $(_z -l 2>&1 | fzf | tr -s " " | cut -d " " -f 2)'
+
 ### guppy basecaller
 
 export LD_LIBRARY_PATH=/opt/ont/guppy/lib/:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/:${LD_LIBRARY_PATH}
 export PATH=/opt/ont/guppy/bin/:${PATH}
+
+
+
 ##################################################
 # SSH 
 ##################################################
@@ -175,8 +221,21 @@ alias maxlogin="ssh max-login"
 
 ## folder shortcuts
 export chipseq="/home/agosdsc/projects/pigx/pigx_chipseq/"
+export localprojects="/data/local/agosdsc/projects"
+export fasttursunprojects="/fast/AG_Tursun/agosdsc/projects"
+export fastakalinprojects="/fast/AG_Akalin/agosdsc/projects"
+export datatursunprojects="/data/tursun/agosdsc/projects"
+export dataakalinprojects="/data/akalin/agosdsc/projects"
 
+##################################################
+# PERL 
+##################################################
 
+PATH="/home/agosdsc/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/agosdsc/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/agosdsc/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/agosdsc/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/agosdsc/perl5"; export PERL_MM_OPT;
 
 
 
@@ -188,7 +247,7 @@ if [ $? -eq 0 ]; then
     \eval "$__conda_setup"
 else
     if [ -f "/home/agosdsc/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/agosdsc/miniconda3/etc/profile.d/conda.sh"
+# . "/home/agosdsc/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
         CONDA_CHANGEPS1=false conda activate base
     else
         \export PATH="/home/agosdsc/miniconda3/bin:$PATH"
@@ -205,3 +264,19 @@ fi
 if type fd >/dev/null 2>&1; then
 	export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/agosdsc/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/agosdsc/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/agosdsc/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/agosdsc/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
