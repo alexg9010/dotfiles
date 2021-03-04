@@ -1,5 +1,8 @@
 """""""""" GENERAL """""""""" 
 
+" set light background by default
+set background=light
+
 " enable filetype plugin
 filetype plugin indent on
 
@@ -25,8 +28,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-
-
 "set windows split defaults
 set splitright
 set splitbelow
@@ -48,6 +49,7 @@ set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 " Use persistent history.
 if !isdirectory("/home/agosdsc/.vim-undo-dir")
     call mkdir("/home/agosdsc/.vim-undo-dir", "", 0700)
+
 endif
 set undodir=~/.vim-undo-dir
 set undofile
