@@ -1,5 +1,8 @@
 """""""""" GENERAL """""""""" 
 
+" set light background by default
+set background=light
+
 " enable filetype plugin
 filetype plugin indent on
 
@@ -11,10 +14,19 @@ set tabstop=4
 " when indenting with '>', use 4 spaces width
 set shiftwidth=4
 " On pressing tab, insert 4 spaces
-"set expandtab
+set expandtab
 
 " close preview window after autocomplete
 autocmd CompleteDone * pclose
+
+" change the way vim replaces text
+set wildmode=longest,list:longest
+
+" easier split navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 "set windows split defaults
 set splitright
@@ -29,10 +41,6 @@ imap <Ctrl-V><backspace> <Ctrl-V><Esc>lxi
 
 " syntax highlighting
 syntax on
-
-"set solarized color scheme
-" set background=dark
-" colorscheme solarized
 
 " show whitespace characters
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
