@@ -76,6 +76,24 @@ let g:airline#extensions#tabline#enabled = 1
 " add vimwiki
 set runtimepath^=~/.vim/pack/dist/start/vimwiki/
 let mapleader = ","
+" define additional wiki for projects
+let g:vimwiki_list = [
+                        \{'path': '~/wiki/vimwiki'},
+                        \{'path': '~/wiki/vimwiki/projects'}
+                \]
+" Find Incomplete Tasks
+function! VimwikiFindIncompleteTasks()
+    lvimgrep /\(-\|*\|#\) \[ \]/j %:p
+    lopen
+endfunction
+
+function! VimwikiFindAllIncompleteTasks()
+  VimwikiSearch /\(-\|*\|#\) \[ \]/
+  lopen
+endfunction
+
+nmap <Leader>wa :call VimwikiFindAllIncompleteTasks()<CR>
+nmap <Leader>wx :call VimwikiFindIncompleteTasks()<CR>
 
 " add commentary for toggling comments
 set runtimepath^=~/.vim/pack/dist/start/commentary
