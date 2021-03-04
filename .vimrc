@@ -70,6 +70,12 @@ let g:netrw_winsize = 25
 " set clipboard to system clipboard
 set clipboard=unnamed
 
+" set .scm files to lisp filetype
+augroup filetypedetect
+    au BufRead,BufNewFile *.scm setfiletype lisp
+    " associate *.foo with php filetype
+augroup END
+
 """""""""" PLUGINS """""""""" 
 
 " ADD PACKAGE 'before VIM8' style
@@ -82,6 +88,31 @@ let g:airline#extensions#tabline#enabled = 1
 " add vimwiki
 set runtimepath^=~/.vim/pack/dist/start/vimwiki/
 let mapleader = ","
+" define additional wiki for projects
+let g:vimwiki_list = [
+                        \{'path': '~/wiki/vimwiki'},
+                        \{'path': '~/wiki/vimwiki/projects'}
+                \]
+" Find Incomplete Tasks
+function! VimwikiFindIncompleteTasks()
+	lvimgrep /\(-\|*\|#\) \[ \]/j %:p
+	lopen
+endfunction
+
+function! VimwikiFindAllIncompleteTasks()
+  VimwikiSearch /\(-\|*\|#\) \[ \]/
+  lopen
+endfunction
+
+nmap <Leader>wa :call VimwikiFindAllIncompleteTasks()<CR>
+nmap <Leader>wx :call VimwikiFindIncompleteTasks()<CR>
+
+" add calendar.vim for showing calendar plugin
+set runtimepath^=~/.vim/pack/dist/start/vim-calendar
+" define command to open calendar
+nmap <silent> <Leader>wc :Calendar<CR>
+nmap <silent> <Leader>wc :Calendar<CR>
+
 
 " add commentary for toggling comments
 set runtimepath^=~/.vim/pack/dist/start/commentary
@@ -120,6 +151,7 @@ let g:ale_virtualenv_dir_names = []
 " 'Hello world!''"
 set runtimepath^=~/.vim/packdist/start/vim-surround
 
+
 " add nvim-r for r-console 
 set runtimepath^=~/.vim/pack/dist/start/Nvim-R
 " Change Leader and LocalLeader keys:
@@ -136,6 +168,12 @@ vmap <Space> <Plug>RDSendSelection
 nmap <Space> <Plug>RDSendLine
 " disable replacement of _ with <-
 let R_assign = 0
+" " add tmux support
+" let R_source = '~/.vim/pack/dist/start/Nvim-R/R//tmux_split.vim'
+" let R_in_buffer = 0                                                       
+" let g:R_term_cmd = 'tmux split-window -c "#{pane_current_path}"'
+
+
 
 " add vim-tmux-navigator to move via <CTRL>-h,j,k,l from/to tmux
 " https://www.bugsnag.com/blog/tmux-and-vim
@@ -156,6 +194,16 @@ command! -bang -nargs=* Rg
 nnoremap <C-g> :Rg<Cr>
 nnoremap <C-f> :Files<Cr>
 
+" add coc autocomple
+set runtimepath^=~/.vim/pack/coc/start/coc.nvim-release
+let g:coc_disable_startup_warning = 1
+" add python support 
+" :CocInstall coc-python
+" add markdown support 
+" :CocInstall coc-markdownlint
+" Use <Tab> and <S-Tab> to navigate the completion list:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " ADD optional PACKAGE 'after VIM8'
 " :packadd! undotree
