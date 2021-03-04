@@ -37,3 +37,29 @@ dotfiles commit -m 'added .bashrc':
 dfs add .bash_profile
 dfs commit -m 'added .bash_profile'
 ```
+
+
+### Adding support for git completion
+
+If you enabled git completion, this will not directly work with the dotfile aliases.
+
+```
+## Git completion
+# curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bas
+# mv ~/.git-completion.bash /usr/local/etc/bash_completion.d/
+if [ -f /usr/local/etc/bash_completion.d/.git-completion.bash ]; then
+  . /usr/local/etc/bash_completion.d/.git-completion.bash
+fi
+```
+
+However you can get it working by leveraging the "normal" git completion methods. 
+
+```
+## get git completion for dotfiles aliases
+# https://stackoverflow.com/questions/9869227/git-autocomplete-in-bash-aliases/24665529
+# Main git completions (prior to git 2.30, you an use _git instead of __git_main)
+# __git_complete dotfiles __git_main
+# __git_complete dfs __git_main
+__git_complete dotfiles _git
+__git_complete dfs _git
+```
