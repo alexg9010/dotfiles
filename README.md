@@ -38,7 +38,6 @@ dfs add .bash_profile
 dfs commit -m 'added .bash_profile'
 ```
 
-
 ### Adding support for git completion
 
 If you enabled git completion, this will not directly work with the dotfile aliases.
@@ -62,4 +61,34 @@ However you can get it working by leveraging the "normal" git completion methods
 # __git_complete dfs __git_main
 __git_complete dotfiles _git
 __git_complete dfs _git
+```
+
+## Syncing dotfiles
+
+If there are settings that you want to sync from one machine to another try the following:
+
+1. Make sure all local changes are commited and commit if not.
+# check status
+dfs st
+```
+2. Checkout respective branches locally.
+```
+## assuming you are on hulk
+dfs co -b macbookPro
+dfs fetch origin macbookPro
+dfs pull origin macbookPro
+```
+3. fix possible merge conflicts, especially when fetching files which do not exist on local machine
+
+4. Copy config files to sync
+```
+dfs co hulk .gitconfig
+dfs ci -m '[git] copy gitconfig from hulk'
+dfs push origin macbookPro
+```
+
+5. fetch updates on other machine
+```
+## assume you are on macbookPro
+dfs pull origin macbookPro
 ```
