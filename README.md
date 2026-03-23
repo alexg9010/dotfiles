@@ -24,7 +24,7 @@ curl -Lks https://raw.githubusercontent.com/alexg9010/dotfiles/master/dotfiles-i
 
 Add these lines to your `.bashrc` to get an alias to manage this specific repo.
 
-```
+```sh
 ## use git repo for tracking dotfiles (https://www.atlassian.com/git/tutorials/dotfiles)
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias dfs='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
@@ -32,7 +32,7 @@ alias dfs='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 Then you can start adding the config files that you want to track, e.g.:
 
-``` 
+``` sh
 dotfiles add .bashrc
 dotfiles commit -m 'added .bashrc':
 
@@ -44,7 +44,7 @@ dfs commit -m 'added .bash_profile'
 
 If you enabled git completion, this will not directly work with the dotfile aliases.
 
-```
+```sh
 ## Git completion
 # curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bas
 # mv ~/.git-completion.bash /usr/local/etc/bash_completion.d/
@@ -55,7 +55,7 @@ fi
 
 However you can get it working by leveraging the "normal" git completion methods. 
 
-```
+```sh
 ## get git completion for dotfiles aliases
 # https://stackoverflow.com/questions/9869227/git-autocomplete-in-bash-aliases/24665529
 # Main git completions (prior to git 2.30, you an use _git instead of __git_main)
@@ -71,13 +71,13 @@ If there are settings that you want to sync from one machine to another try the 
 
 1. Make sure all local changes are commited and commit if not.
 
-```
+```sh
 # check status
 dfs st
 ```
 2. Checkout respective branches locally.
 
-```
+```sh
 ## assuming you are on hulk
 
 dfs co -b macbookPro
@@ -89,7 +89,7 @@ dfs pull origin macbookPro
 
 4. Copy config files to sync
 
-```
+```sh
 dfs co hulk .gitconfig
 dfs ci -m '[git] copy gitconfig from hulk'
 dfs push origin macbookPro
@@ -97,7 +97,7 @@ dfs push origin macbookPro
 
 5. fetch updates on other machine
 
-```
+```sh
 ## assume you are on macbookPro
 dfs pull origin macbookPro
 ```
