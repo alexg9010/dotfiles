@@ -1,0 +1,203 @@
+#!/bin/bash
+
+set -o pipefail 2>/dev/null || true
+
+# Worktree organization: <repo>/.worktrees/<branch>
+WORKTREE_ROOT="${WORKTREE_ROOT:-$(git worktree list | head -1 | awk '{print $1}')}"
+
+wt() {
+  local create=false
+  local delete=false
+  local init=false
+  local copy_envrc=false
+  local tmux_session=false
+  local name=""
+  local target=""
+  local root
+  local base
+
+  _wt_usage() {
+    cat <<USAGE
+Usage: wt [-i] [-c [name]] [-e] [-t] [-d [path]] [-h]
+
+Options:
+  -i          Init: create .worktrees/ folder and add to .gitignore
+  -c [name]   Create a worktree; if no name given, select branch via fzf
+  -e          Copy .envrc from root and run direnv allow (use with -c)
+  -t          Start a new tmux session for the worktree (use with -c, or alone to select)
+  -d [path]   Delete a worktree (fuzzy select if no path given, use '.' for current)
+  -h          Show this help message
+USAGE
+  }
+
+  # Add this helper at the top of wt()
+  _wt_realpath() {
+    cd "$1" 2>/dev/null && pwd || echo "$1"
+  }
+
+  _wt_base() {
+    local wt_dir="$root/.worktrees"
+    if [[ ! -d "$wt_dir" ]]; then
+      _wt_init >/dev/null
+    fi
+    echo "$wt_dir"
+  }
+
+
+  _wt_tmux() {
+    local wt_path_arg="$1"
+    local main_wt
+    main_wt=$(git worktree list | head -1 | awk '{print $1}')
+    local repo_name
+    repo_name=$(basename "$main_wt" | tr '.' '_')
+    local worktree_name
+    worktree_name=$(basename "$wt_path_arg" | tr '.' '_' | tr '/' '_')
+    local session_name="${repo_name}/${worktree_name}"
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      echo "Attaching to existing tmux session: $session_name"
+      tmux switch-client -t "$session_name" 2>/dev/null || tmux attach-session -t "$session_name"
+    else
+      echo "Starting tmux session: $session_name"
+      tmux new-session -d -s "$session_name" -c "$wt_path_arg"
+      tmux switch-client -t "$session_name" 2>/dev/null || tmux attach-session -t "$session_name"
+    fi
+  }
+  _wt_is_main() {
+    local wt_path_arg="$1"
+    local main_wt
+    main_wt=$(git worktree list | head -1 | awk '{print $1}')
+    [[ "$(_wt_realpath "$wt_path_arg")" == "$(_wt_realpath "$main_wt")" ]]
+  }
+
+  _wt_navigate() {
+    local wt_path_arg="$1"
+    if $tmux_session; then
+      _wt_tmux "$wt_path_arg"
+    else
+      cd "$wt_path_arg"
+    fi
+  }
+
+  _wt_init() {
+    local wt_dir="$root/.worktrees"
+    local gitignore="$root/.gitignore"
+    if [[ ! -d "$wt_dir" ]]; then
+      mkdir -p "$wt_dir"
+      echo "Created $wt_dir"
+    else
+      echo ".worktrees/ already exists"
+    fi
+    if ! grep -qxF '.worktrees/' "$gitignore" 2>/dev/null; then
+      echo '.worktrees/' >> "$gitignore"
+      echo "Added .worktrees/ to .gitignore"
+    else
+      echo ".worktrees/ already in .gitignore"
+    fi
+  }
+
+  _wt_create() {
+    if [[ -z "$name" ]]; then
+      command -v fzf >/dev/null 2>&1 || {
+        echo "Error: fzf is required when no branch name is provided"; return 1;
+      }
+      name=$(git branch -a --format='%(refname:short)' \
+        | sed 's|^origin/||' \
+        | grep -v '^HEAD$' \
+        | sort -u \
+        | fzf --height 40% --reverse --prompt="branch> " --print-query | tail -1)
+      [[ -z "$name" ]] && return 0
+    fi
+    local new_path
+    new_path="$(_wt_base)/$name"
+    local existing
+    existing=$(git worktree list | awk '{print $1}' | while read -r wt_path; do
+      local branch
+      branch=$(git -C "$wt_path" rev-parse --abbrev-ref HEAD 2>/dev/null)
+      [[ "$branch" == "$name" ]] && echo "$wt_path" && break
+    done)
+    if [[ -n "$existing" ]]; then
+      echo "Worktree for '$name' already exists at $existing"
+      _wt_navigate "$existing"
+      return 0
+    fi
+    if git show-ref --verify --quiet "refs/heads/$name"; then
+      git worktree add "$new_path" "$name"
+    elif git show-ref --verify --quiet "refs/remotes/origin/$name"; then
+      git worktree add --track -b "$name" "$new_path" "origin/$name"
+    else
+      git worktree add "$new_path" -b "$name"
+    fi
+    if $copy_envrc && [[ -f "$root/.envrc" ]]; then
+      cp "$root/.envrc" "$new_path/.envrc"
+      direnv allow "$new_path/.envrc"
+    fi
+    _wt_navigate "$new_path"
+  }
+
+
+  _wt_delete() {
+    local to_delete
+    if [[ -n "$target" ]]; then
+      to_delete=$(_wt_realpath "$target")
+    else
+      command -v fzf >/dev/null 2>&1 || {
+        echo "Error: fzf is required when no worktree path is provided"; return 1;
+      }
+      to_delete=$(git worktree list | tail -n +2 | fzf --height 40% --reverse | awk '{print $1}')
+    fi
+    [[ -z "$to_delete" ]] && return 0
+    if _wt_is_main "$to_delete"; then
+      echo "Error: cannot delete main worktree"; return 1
+    fi
+    local main_wt
+    main_wt=$(git worktree list | head -1 | awk '{print $1}')
+    [[ "$(_wt_realpath .)" == "$to_delete"* ]] && cd "$main_wt"
+    git worktree remove "$to_delete"
+  }
+
+  # --- parse args ---
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -i|--init) init=true; shift ;;
+      -c) create=true; shift; [[ $# -gt 0 && ! "$1" =~ ^- ]] && { name="$1"; shift; } ;;
+      -e) copy_envrc=true; shift ;;
+      -t) tmux_session=true; shift ;;
+      -d) delete=true; shift; [[ $# -gt 0 && ! "$1" =~ ^- ]] && { target="$1"; shift; } ;;
+      -h) _wt_usage; return 0 ;;
+      *) _wt_usage; return 1 ;;
+    esac
+  done
+
+  if ($create || $copy_envrc) && $delete; then
+    echo "Error: -c/-e and -d are mutually exclusive"; return 1
+  fi
+
+  root=$(git worktree list 2>/dev/null | head -1) || { echo "Error: not in a git repo"; return 1; }
+
+  # --- dispatch ---
+
+  if $init;   then _wt_init;   return $?; fi
+  if $create; then _wt_create; return $?; fi
+  if $delete; then _wt_delete; return $?; fi
+
+  # default: select and navigate to existing worktree
+  command -v fzf >/dev/null 2>&1 || {
+    echo "Error: fzf is required when no worktree path is provided"; return 1;
+  }
+  local selected
+  selected=$(git worktree list | fzf --height 40% --reverse | awk '{print $1}')
+  [[ -z "$selected" ]] && return 0
+  _wt_navigate "$selected"
+}
+
+_wt_sourced=false
+if [[ -n "${BASH_VERSION:-}" ]]; then
+  [[ "${BASH_SOURCE[0]}" != "$0" ]] && _wt_sourced=true
+elif [[ -n "${ZSH_VERSION:-}" ]]; then
+  [[ "$ZSH_EVAL_CONTEXT" == *:file ]] && _wt_sourced=true
+fi
+
+if ! $_wt_sourced; then
+  wt "$@"
+fi
